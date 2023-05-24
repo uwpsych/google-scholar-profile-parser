@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 namespace GScholarProfileParser\Iterator;
 
 use FilterIterator;
@@ -33,7 +29,7 @@ class PublicationYearFilterIterator extends FilterIterator
     /**
      * @return bool
      */
-    public function accept() : bool
+    public function accept(): bool
     {
         if (!$this->getInnerIterator()->valid()) {
             return false;
@@ -42,6 +38,6 @@ class PublicationYearFilterIterator extends FilterIterator
         /** @var Publication $publication */
         $publication = $this->current();
 
-        return $publication->getYear() === $this->year;
+        return $publication->year === $this->year;
     }
 }

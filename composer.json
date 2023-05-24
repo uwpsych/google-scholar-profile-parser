@@ -1,40 +1,40 @@
 {
-    "name": "bborrel/google-scholar-profile-parser",
-    "description": "Parses a profile page from Google Scholar.",
-    "type": "library",
-    "require": {
-        "php": ">=7.1.0",
-        "ext-dom": "*",
-        "fabpot/goutte": "^3.2"
-    },
-    "license": "GPL-3.0-only",
-    "authors": [
-        {
-            "name": "Benoit Borrel",
-            "email": "benoit@borrel.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "GScholarProfileParser\\": "src/"
-        },
-        "exclude-from-classmap": ["/tests/"]
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "sort-packages": true
-    },
-    "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-        "edgedesign/phpqa": "^1.22",
-        "infection/infection": "^0.15.0",
-        "jakub-onderka/php-parallel-lint": "^1.0",
-        "object-calisthenics/phpcs-calisthenics-rules": "^3.5",
-        "pheromone/phpcs-security-audit": "^2.0",
-        "php-coveralls/php-coveralls": "^2.1",
-        "phpcompatibility/php-compatibility": "^9.1",
-        "phpstan/phpstan": "^0.12.0",
-        "phpunit/phpunit": "^8.0",
-        "vimeo/psalm": "^4.9"
+  "name": "bborrel/google-scholar-profile-parser",
+  "description": "Parses a profile page from Google Scholar.",
+  "type": "library",
+  "require": {
+    "php": ">=8.1",
+    "symfony/browser-kit": "^6.2",
+    "symfony/http-client": "^6.2"
+  },
+  "license": "GPL-3.0-only",
+  "authors": [
+    {
+      "name": "Benoit Borrel",
+      "email": "benoit@borrel.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "GScholarProfileParser\\": "src/"
+    },
+    "exclude-from-classmap": [
+      "/tests/"
+    ]
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "allow-plugins": {
+      "infection/extension-installer": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "require-dev": {
+    "symplify/phpstan-rules": "^12.0",
+    "pheromone/phpcs-security-audit": "^2.0",
+    "phpstan/phpstan": "^1.10",
+    "phpunit/phpunit": "^10.0",
+    "vimeo/psalm": "^5.12"
+  }
 }

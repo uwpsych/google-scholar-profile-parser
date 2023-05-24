@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 namespace GScholarProfileParser\Parser;
 
 use PHPUnit\Framework\TestCase;

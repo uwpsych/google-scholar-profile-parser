@@ -6,3 +6,8 @@ vendor
 
 # project
 build
+
+composer.lock
+
+.phpunit.result.cache
+.phpunit.cache

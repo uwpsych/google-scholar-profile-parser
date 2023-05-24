@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 namespace GScholarProfileParser\Entity;
 
 use GScholarProfileParser\DomCrawler\ProfilePageCrawler;
@@ -16,43 +12,37 @@ class PublicationTest extends TestCase
     protected function setUp(): void
     {
         $this->properties = [
-            'title' => null,
-            'publicationPath' => null,
-            'authors' => null,
-            'publisherDetails' => null,
-            'nbCitations' => null,
-            'citationsURL' => null,
-            'year' => null,
+            'title' => 'A Title',
+            'publicationPath' => 'a-publication-path',
+            'authors' => 'Author 1, Author 2',
+            'publisherDetails' => 'A Journal, volume 1, issue 1, pages 1-10',
+            'nbCitations' => 1,
+            'citationsURL' => 'http://domain.tld/citation',
+            'year' => 2019,
         ];
     }
 
     private function createUnitUnderTest(array $properties): Publication
     {
-        return new Publication($properties);
+        return new Publication(...$properties);
     }
 
     public function testGetTitle(): void
     {
-        $this->properties['title'] = 'A Title';
-
         $uut = $this->createUnitUnderTest($this->properties);
 
-        $this->assertSame($this->properties['title'], $uut->getTitle());
+        $this->assertSame($this->properties['title'], $uut->title);
     }
 
     public function testGetPublicationPath(): void
     {
-        $this->properties['publicationPath'] = 'a-publication-path';
-
         $uut = $this->createUnitUnderTest($this->properties);
 
-        $this->assertSame($this->properties['publicationPath'], $uut->getPublicationPath());
+        $this->assertSame($this->properties['publicationPath'], $uut->publicationPath);
     }
 
     public function testGetPublicationURL(): void
     {
-        $this->properties['publicationPath'] = 'a-publication-path';
-
         $uut = $this->createUnitUnderTest($this->properties);
 
         $this->assertSame(ProfilePageCrawler::getSchemeAndHostname() . $this->properties['publicationPath'], $uut->getPublicationURL());
@@ -60,60 +50,52 @@ class PublicationTest extends TestCase
 
     public function testGetAuthors(): void
     {
-        $this->properties['authors'] = 'Author 1, Author 2';
-
         $uut = $this->createUnitUnderTest($this->properties);
 
-        $this->assertSame($this->properties['authors'], $uut->getAuthors());
+        $this->assertSame($this->properties['authors'], $uut->authors);
     }
 
     public function testGetPublisherDetails(): void
     {
-        $this->properties['publisherDetails'] = 'A Journal, volume 1, issue 1, pages 1-10';
-
         $uut = $this->createUnitUnderTest($this->properties);
 
-        $this->assertSame($this->properties['publisherDetails'], $uut->getPublisherDetails());
+        $this->assertSame($this->properties['publisherDetails'], $uut->publisherDetails);
     }
 
     public function testGetNbCitations(): void
     {
-        $this->properties['nbCitations'] = '1';
-
         $uut = $this->createUnitUnderTest($this->properties);
 
-        $this->assertSame((int)$this->properties['nbCitations'], $uut->getNbCitations());
+        $this->assertSame((int)$this->properties['nbCitations'], $uut->nbCitations);
     }
 
     public function testGetNbCitationsWhenNull(): void
     {
+        $this->properties['nbCitations'] = null;
         $uut = $this->createUnitUnderTest($this->properties);
 
-        $this->assertSame($this->properties['nbCitations'], $uut->getNbCitations());
+        $this->assertSame($this->properties['nbCitations'], $uut->nbCitations);
     }
 
     public function testGetCitationsURL(): void
     {
-        $this->properties['citationsURL'] = 'http://domain.tld/citation';
-
         $uut = $this->createUnitUnderTest($this->properties);
 
-        $this->assertSame($this->properties['citationsURL'], $uut->getCitationsURL());
+        $this->assertSame($this->properties['citationsURL'], $uut->citationsURL);
     }
 
     public function testGetCitationsURLWhenNull(): void
     {
+        $this->properties['citationsURL'] = null;
         $uut = $this->createUnitUnderTest($this->properties);
 
-        $this->assertSame($this->properties['citationsURL'], $uut->getCitationsURL());
+        $this->assertSame($this->properties['citationsURL'], $uut->citationsURL);
     }
 
     public function testGetYear(): void
     {
-        $this->properties['year'] = '2019';
-
         $uut = $this->createUnitUnderTest($this->properties);
 
-        $this->assertSame((int)$this->properties['year'], $uut->getYear());
+        $this->assertSame((int)$this->properties['year'], $uut->year);
     }
 }
