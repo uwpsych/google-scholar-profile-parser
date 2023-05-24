@@ -12,9 +12,11 @@ class Statistics
         public readonly int $i10Index,
         public readonly int $i10IndexSince,
         public readonly int $sinceYear,
-        public readonly array $nbCitationsPerYear,
+        public array $nbCitationsPerYear,
     )
     {
-        // 
+        foreach($nbCitationsPerYear as $key => $count) {
+            $this->nbCitationsPerYear[$key] = (int)$count;
+        }
     }
 }

@@ -3,12 +3,13 @@
 namespace GScholarProfileParser\Parser;
 
 use DOMElement;
+use GScholarProfileParser\Entity\Publication;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Parses a scholar's profile page from Google Scholar and returns its publications.
  */
-class PublicationParser extends BaseParser implements Parser
+class PublicationParser extends BaseParser
 {
 
     public const GSCHOLAR_XPATH = '//table[@id="gsc_a_t"]/tbody[@id="gsc_a_b"]/tr[@class="gsc_a_tr"]';
@@ -34,14 +35,14 @@ class PublicationParser extends BaseParser implements Parser
             $publications[] = $this->parsePublication($domPublication);
         }
 
-        return $this->deduplicate($publications);
+        return $publications;
     }
 
     /**
      * @param DOMElement $domPublication
-     * @return array<string, string>
+     * @return Publication
      */
-    private function parsePublication(DOMElement $domPublication): array
+    private function parsePublication(DOMElement $domPublication): Publication
     {
         $title = $citation = $year = [];
 
@@ -58,7 +59,9 @@ class PublicationParser extends BaseParser implements Parser
             }
         }
 
-        return array_merge($title, $citation, $year);
+        $properties = array_merge($title, $citation, $year);
+
+        return new Publication(...$properties);
     }
 
     /**
@@ -86,7 +89,12 @@ class PublicationParser extends BaseParser implements Parser
             ++$childNodeIndex;
         }
 
-        return compact('title', 'publicationPath', 'authors', 'publisherDetails');
+        return [
+            'title' => $title,
+            'publicationPath' => $publicationPath,
+            'authors' => $authors,
+            'publisherDetails' => $publisherDetails,
+        ];
     }
 
     /**
@@ -130,16 +138,5 @@ class PublicationParser extends BaseParser implements Parser
         }
 
         return $text;
-    }
-
-    /**
-     * Returns $publications array filtered out from any title-duplicated publications.
-     *
-     * @param array<int, array<string, string>> $publications
-     * @return array<int, array<string, string>>
-     */
-    private function deduplicate(array $publications): array
-    {
-        return array_intersect_key($publications, array_unique(array_column($publications, 'title')));
     }
 }

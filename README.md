@@ -21,14 +21,18 @@ The parsed data from a scholar is:
 
 ## Table of content
 
-- [Project Rationale](#project-rationale)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Versioning](#versioning)
-- [Code Quality](#code-quality)
-- [Author](#author)
-- [License](#license)
+- [Google Scholar Profile Parser](#google-scholar-profile-parser)
+  - [Table of content](#table-of-content)
+  - [Project Rationale](#project-rationale)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Publications](#publications)
+    - [Statistics](#statistics)
+  - [Versioning](#versioning)
+  - [Code Quality](#code-quality)
+  - [Author](#author)
+  - [License](#license)
 
 ## Project Rationale
 
@@ -64,7 +68,61 @@ composer require bborrel/google-scholar-profile-parser
 
 ## Usage
 
-See the examples in the [library's documentation][8].
+### Publications
+```php
+use GScholarProfileParser\DomCrawler\ProfilePageCrawler;
+use GScholarProfileParser\Parser\PublicationParser;
+use GScholarProfileParser\Entity\Publication;
+
+$crawler = new ProfilePageCrawler(profileId: '8daWuo4AAAAJ');
+
+$parser = new PublicationParser($crawler);
+$publications = $parser->parse();
+
+$latestPublication = $publications[0];
+
+// displays latest publication data
+echo $latestPublication->title, "\n";
+echo $latestPublication->getPublicationURL(), "\n";
+echo $latestPublication->authors, "\n";
+echo $latestPublication->publisherDetails, "\n";
+echo $latestPublication->nbCitations, "\n";
+echo $latestPublication->citationsURL, "\n";
+echo $latestPublication->year, "\n";
+```
+
+### Statistics
+```php
+use GScholarProfileParser\DomCrawler\ProfilePageCrawler;
+use GScholarProfileParser\Entity\Statistics;
+use GScholarProfileParser\Parser\StatisticsParser;
+
+$crawler = new ProfilePageCrawler(profileId: '8daWuo4AAAAJ');
+
+$parser = new StatisticsParser($crawler);
+$statistics = new Statistics(...$parser->parse());
+
+$nbCitationsPerYear = $statistics->nbCitationsPerYear;
+$sinceYear = $statistics->sinceYear;
+
+$nbCitationsSinceYear = 0;
+foreach ($nbCitationsPerYear as $year => $nbCitations) {
+    if ($year >= $sinceYear) {
+        $nbCitationsSinceYear += $nbCitations;
+    }
+}
+
+// display statistics
+echo sprintf("           All\t%4d\n", $sinceYear);
+echo sprintf("Citations: %4d\t%4d\n", $statistics->nbCitations, $nbCitationsSinceYear);
+echo sprintf("h-index  : %4d\t%4d\n", $statistics->hIndex, $statistics->hIndexSince);
+echo sprintf("i10-index: %4d\t%4d\n", $statistics->i10Index, $statistics->i10IndexSince);
+echo "\n";
+echo implode("\t", array_keys($nbCitationsPerYear));
+echo "\n";
+echo implode("\t", array_values($nbCitationsPerYear));
+echo "\n";
+```
 
 ## Versioning
 

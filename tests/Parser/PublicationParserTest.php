@@ -2,6 +2,8 @@
 
 namespace GScholarProfileParser\Parser;
 
+use GScholarProfileParser\DomCrawler\ProfilePageCrawler;
+use GScholarProfileParser\Entity\Publication;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -23,14 +25,14 @@ class PublicationParserTest extends TestCase
         $this->htmlFile = fopen($this->htmlFileName, 'rb');
 
         $this->parsedPublications = [
-            [
+            new Publication(...[
                 'title' => 'Interaction of oxygen functionalized multi-walled carbon nanotube nanofluids with copper',
                 'publicationPath' => '/citations?view_op=view_citation&hl=en&user=8daWuo4AAAAJ&pagesize=2&sortby=pubdate&citation_for_view=8daWuo4AAAAJ:NhqRSupF_l8C',
                 'authors' => 'A Karthikeyan, S Coulombe, AM Kietzig, RS Stein, T van de Ven',
                 'publisherDetails' => 'Carbon 140, 201-209',
                 'year' => '2018',
-            ],
-            [
+            ]),
+            new Publication(...[
                 'title' => 'Boiling heat transfer enhancement with stable nanofluids and laser textured copper surfaces',
                 'publicationPath' => '/citations?view_op=view_citation&hl=en&user=8daWuo4AAAAJ&pagesize=2&sortby=pubdate&citation_for_view=8daWuo4AAAAJ:bFI3QPDXJZMC',
                 'authors' => 'A Karthikeyan, S Coulombe, AM Kietzig',
@@ -38,28 +40,13 @@ class PublicationParserTest extends TestCase
                 'nbCitations' => '1',
                 'citationsURL' => 'https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15502897746301575580',
                 'year' => '2018',
-            ]
+            ])
         ];
     }
 
     protected function tearDown(): void
     {
         fclose($this->htmlFile);
-    }
-
-    /**
-     * @covers \GScholarProfileParser\Parser\PublicationParser
-     */
-    public function testParse(): void
-    {
-        $publicationParser = $this->createUnitUnderTest();
-
-        $this->assertSame($this->parsedPublications, $publicationParser->parse());
-    }
-
-    private function createUnitUnderTest(): PublicationParser
-    {
-        return new PublicationParser($this->createTestCrawler());
     }
 
     private function createTestCrawler(): Crawler
@@ -69,5 +56,20 @@ class PublicationParserTest extends TestCase
         $crawler->addContent($content, 'text/html; charset=ISO-8859-1');
 
         return $crawler;
+    }
+
+    private function createUnitUnderTest(): PublicationParser
+    {
+        return new PublicationParser($this->createTestCrawler());
+    }
+
+    /**
+     * @covers \GScholarProfileParser\Parser\PublicationParser
+     */
+    public function testParse(): void
+    {
+        $publicationParser = $this->createUnitUnderTest();
+
+        $this->assertEquals($this->parsedPublications, $publicationParser->parse());
     }
 }

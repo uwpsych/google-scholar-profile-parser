@@ -2,6 +2,7 @@
 
 namespace GScholarProfileParser\Parser;
 
+use GScholarProfileParser\Entity\Statistics;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -22,7 +23,7 @@ class StatisticsParserTest extends TestCase
         $this->htmlFileName = __DIR__ . '/../data/8daWuo4AAAAJ.html';
         $this->htmlFile = fopen($this->htmlFileName, 'rb');
 
-        $this->parsedStatistics = [
+        $this->parsedStatistics = new Statistics(...[
             'sinceYear' => '2014',
             'nbCitations' => '1338',
             'nbCitationsSince' => '1149',
@@ -43,27 +44,12 @@ class StatisticsParserTest extends TestCase
                 '2018' => '348',
                 '2019' => '83',
             ]
-        ];
+        ]);
     }
 
     protected function tearDown(): void
     {
         fclose($this->htmlFile);
-    }
-
-    /**
-     * @covers \GScholarProfileParser\Parser\StatisticsParser
-     */
-    public function testParse()
-    {
-        $statisticsParser = $this->createUnitUnderTest();
-
-        $this->assertSame($this->parsedStatistics, $statisticsParser->parse());
-    }
-
-    private function createUnitUnderTest(): StatisticsParser
-    {
-        return new StatisticsParser($this->createTestCrawler());
     }
 
     private function createTestCrawler(): Crawler
@@ -73,5 +59,20 @@ class StatisticsParserTest extends TestCase
         $crawler->addContent($content, 'text/html; charset=ISO-8859-1');
 
         return $crawler;
+    }
+
+    private function createUnitUnderTest(): StatisticsParser
+    {
+        return new StatisticsParser($this->createTestCrawler());
+    }
+
+    /**
+     * @covers \GScholarProfileParser\Parser\StatisticsParser
+     */
+    public function testParse()
+    {
+        $statisticsParser = $this->createUnitUnderTest();
+
+        $this->assertEquals($this->parsedStatistics, $statisticsParser->parse());
     }
 }

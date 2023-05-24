@@ -3,24 +3,20 @@
 namespace GScholarProfileParser\Parser;
 
 use DOMElement;
+use GScholarProfileParser\Entity\Statistics;
 use Symfony\Component\DomCrawler\Crawler;
-use function strlen;
 
 /**
  * Parses a scholar's profile page from Google Scholar and returns its statistics.
  */
-class StatisticsParser extends BaseParser implements Parser
+class StatisticsParser extends BaseParser
 {
-
     public const GSCHOLAR_XPATH_SINCE_YEAR = '//table[@id="gsc_rsb_st"]//th[3]';
     public const GSCHOLAR_XPATH_METRICS = '//table[@id="gsc_rsb_st"]//td[@class="gsc_rsb_std"]';
     public const GSCHOLAR_XPATH_YEARS = '//div[@class="gsc_md_hist_b"]/span[@class="gsc_g_t"]';
     public const GSCHOLAR_XPATH_NB_CITATIONS = '//div[@class="gsc_md_hist_b"]/a[@class="gsc_g_a"]';
 
-    /**
-     * @return array<string, array<string, string>|string>
-     */
-    public function parse(): array
+    public function parse(): Statistics
     {
         $sinceYear = $this->parseSinceYear();
 
@@ -28,7 +24,9 @@ class StatisticsParser extends BaseParser implements Parser
 
         $nbCitationsPerYear = $this->parseNbCitationsPerYear();
 
-        return array_merge($sinceYear, $metrics, $nbCitationsPerYear);
+        $properties = array_merge($sinceYear, $metrics, $nbCitationsPerYear);
+
+        return new Statistics(...$properties);
     }
 
     /**

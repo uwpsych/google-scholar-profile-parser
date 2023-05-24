@@ -2,6 +2,7 @@
 
 namespace GScholarProfileParser\Parser;
 
+use GScholarProfileParser\DomCrawler\ProfilePageCrawler;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -9,8 +10,8 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 abstract class BaseParser
 {
-    public function __construct(protected Crawler $crawler)
+    public function __construct(protected $crawler)
     {
-        $this->crawler = $crawler;
+        $this->crawler = $crawler instanceof Crawler ? $crawler : $crawler->getCrawler();
     }
 }
