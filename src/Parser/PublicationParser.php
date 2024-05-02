@@ -122,7 +122,7 @@ class PublicationParser extends BaseParser
      */
     private function parsePublicationYear(DOMElement $node): array
     {
-        return ['year' => $node->textContent];
+        return ['year' => (int) $node->textContent];
     }
 
     /**
